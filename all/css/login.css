@@ -1,0 +1,43 @@
+body{
+	background-color:lightgreen;
+	margin:0px;
+    text-align: center;
+
+}
+
+.main{
+	background-color:white;
+	text-align: center;
+	width:500px;
+	display: inline-block;
+	margin-top: 140px;
+
+}
+.input{
+	margin: 20px;
+	padding:40px;
+	text-align: center;
+}
+#big{
+	background-color:#f3f3f3;
+	height:50px;
+	border:none white;
+	width:350px;
+}
+#bi{
+	background-color:green;
+	height:50px;
+	border:none;
+	width:350px;
+	color:white;
+}
+a{
+	color:#00cc7a;
+	text-decoration: none;
+}
+.p{
+	color:grey;
+
+}
+
+
