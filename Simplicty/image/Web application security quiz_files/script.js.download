@@ -1,0 +1,461 @@
+// -------------------------- CONFIG -------------------------------------------
+document.imageDirPrefix = '/media/embed/images';
+// ---------------------- END OF CONFIG ----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+//$(document).ready(function(){ 
+jQuery(function($) {
+  $(".widgetContainer area").live({
+    mouseenter: function() {
+		  itemnumber = $(this).parents("map").prevAll("map").length;
+      textnumber = itemnumber + 1;
+      $parent = $(this).parents(".widgetContainer");
+
+      //$parent.find(".active").removeClass("active");
+      $parent.find("p").stop().hide();
+
+      if ($parent.hasClass("widget400x400") || $parent.hasClass("widget230x230")) {
+        $parent.find("img:eq(" + itemnumber + ")").css("opacity" , "1");
+        str = $parent.find("img:eq(" + itemnumber + ")").attr("src");
+        newsrc = str.replace(".png","-hover.png");
+        $parent.find("img:eq(" + itemnumber + ")").attr("src" , newsrc);           
+
+        //ie8 hack
+        if ($.browser.msie && $.browser.version < 9) {
+    	    $parent.find(".widgetText" + textnumber).show();
+        }
+        else {
+          $parent.find(".widgetText" + textnumber).stop().fadeIn();
+        }              
+      }
+    },
+    mouseleave: function() {
+      $parent.find("p").not(".widgetTitle").stop().hide();
+
+      if ($parent.hasClass("widget400x400") || $parent.hasClass("widget230x230")) {
+        if ($parent.hasClass("widget230x230") && !$parent.find("img:eq(" + itemnumber + ")").hasClass("active")) {
+          $parent.find("img:eq(" + itemnumber + ")").css("opacity" , "0.5");
+        }
+      
+        str = $parent.find("img:eq(" + itemnumber + ")").attr("src");
+        newsrc = str.replace("-hover.png",".png");
+        $parent.find("img:eq(" + itemnumber + ")").attr("src" , newsrc);           
+
+        //ie8 hack
+  		  if ($.browser.msie && $.browser.version < 9) {
+          $parent.find(".widgetTitle").show();
+        }
+        else {
+          $parent.find(".widgetTitle").stop().fadeIn();
+        }
+      }   
+    }
+  });
+  
+  
+  
+  
+      function ChartWidget() {
+      this.xmlDoc = null;
+      this.texts = new Array();
+      this.hasError = false;
+      this.loadReady = false;
+      
+      
+      this.init = function() {
+
+
+        this.texts['sct250x250'] = 
+            '        <!--widget container sct 250 x 250 starts here-->' +
+            '        <div class="widgetContainer widget250x250 widgetsct">' +
+            '          <img src="' + document.imageDirPrefix + '/widget-sct-250x250.png" alt="" title="" />' +
+            '          ' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sctTitle%}</p>     ' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>  ' +
+            '        </div>' +
+            '        <!--widget container sct 250 x 250 ends here-->'
+        ;
+        
+        this.texts['sas250x250'] = 
+            '        <!--widget container sas 250 x 250 starts here-->' +
+            '        <div class="widgetContainer widget250x250 widgetsas">' +
+            '          <img alt="" src="' + document.imageDirPrefix + '/widget-sas-250x250.png" />' +
+            '          ' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sasTitle%}</p>     ' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>  ' +
+            '        </div>' +
+            '        <!--widget container sas 250 x 250 ends here-->'
+        ;
+        
+        this.texts['psls250x250'] = 
+            '		<!--widget container psls 250 x 250 starts here-->' +
+            '        <div class="widgetContainer widget250x250 widgetpsls">' +
+            '          <img alt="" src="' + document.imageDirPrefix + '/widget-psls-250x250.png" />' +
+            '          ' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%pslsTitle%}</p>        ' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>  ' +
+            '        </div>' +
+            '        <!--widget container psls 250 x 250 ends here-->'
+        ;
+        
+        this.texts['sct230x230'] = 
+            '<!--widget container sct 230 x 230 starts here-->' +
+            '        <div class="widgetContainer widget230x230 widgetsct">' +
+            '          <img src="' + document.imageDirPrefix + '/widget-sct-230x230.png" alt="" title="" />' +
+            '          ' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sctTitle%}</p>     ' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>  ' +
+            '        </div>' +
+            '        <!--widget container sct 230 x 230 ends here-->'
+        ;
+        
+        this.texts['sas230x230'] = 
+            '<!--widget container sas 230 x 230 starts here-->' +
+            '        <div class="widgetContainer widget230x230 widgetsas">' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sasTitle%}</p>' +
+            '                  ' +
+            '                  ' +
+            '                  <p class="widgetText1">{%sasReqText%}</p>' +
+            '                  <p class="widgetText2">{%sasDesText%}</p>' +
+            '                  <p class="widgetText3">{%sasImpText%}</p>' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>' +
+            '        ' +
+            '          ' +
+            '          <img alt="" class="widgetImg1[[active1]]" src="' + document.imageDirPrefix + '/widget-sas-230x230-image1.png" usemap="#wigdetmap-sas-230x230-1" />' +
+            '          <img alt="" class="widgetImg2[[active2]]" src="' + document.imageDirPrefix + '/widget-sas-230x230-image2.png" usemap="#wigdetmap-sas-230x230-2" />' +
+            '          <img alt="" class="widgetImg3[[active3]]" src="' + document.imageDirPrefix + '/widget-sas-230x230-image3.png" usemap="#wigdetmap-sas-230x230-3" />' +
+            '          ' +
+            '          ' +
+            '          <map name="wigdetmap-sas-230x230-1" id="wigdetmap-sas-230x230-1">' +
+            '            <area alt="" class="area1" href="/services/security-evaluation-services/attack-technology-watch" coords="189,17,177,40,155,59,132,72,112,77,80,77,62,72,35,59,15,40,1,17,35,1,47,19,69,35,82,39,96,26,109,39,128,32,148,15,155,1,189,17" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-sas-230x230-2" id="wigdetmap-sas-230x230-2">' +
+            '            <area alt="" class="area2" href="/services/security-evaluation-services/security-testing" coords="9,144,3,125,1,91,9,62,24,37,49,16,80,3,102,1,102,38,80,43,57,59,61,77,42,82,38,101,42,122,44,128,9,144" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-sas-230x230-3" id="wigdetmap-sas-230x230-3">' +
+            '            <area alt="" class="area3" href="/services/security-evaluation-services/security-audit" coords="95,143,62,127,67,110,63,82,44,77,49,58,24,43,0,37,3,-1,35,6,67,24,94,59,100,82,101,120" shape="poly" />' +
+            '          </map>' +
+            '        </div>' +
+            '        <!--widget container sas 230 x 230 ends here-->'
+        ;
+        
+        this.texts['psls230x230'] = 
+            '        <!--widget container psls 230 x 230 starts here-->' +
+            '        <div class="widgetContainer widget230x230 widgetpsls">' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%pslsTitle%}</p>' +
+            '                  ' +
+            '                  ' +
+            '                  <p class="widgetText1">{%pslsReqText%}</p>' +
+            '                  <p class="widgetText2">{%pslsDesText%}</p>' +
+            '                  <p class="widgetText3">{%pslsImpText%}</p>' +
+            '                  <p class="widgetText4">{%pslsTstText%}</p>' +
+            '                  <p class="widgetText5">{%pslsDepText%}</p>' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>' +
+            '        ' +
+            '          ' +
+            '          <img alt="" class="widgetImg1[[active1]]" src="' + document.imageDirPrefix + '/widget-psls-230x230-image1.png" usemap="#wigdetmap-psls-230x230-1" />' +
+            '          <img alt="" class="widgetImg2[[active2]]" src="' + document.imageDirPrefix + '/widget-psls-230x230-image2.png" usemap="#wigdetmap-psls-230x230-2" />' +
+            '          <img alt="" class="widgetImg3[[active3]]" src="' + document.imageDirPrefix + '/widget-psls-230x230-image3.png" usemap="#wigdetmap-psls-230x230-3" />' +
+            '          <img alt="" class="widgetImg4[[active4]]" src="' + document.imageDirPrefix + '/widget-psls-230x230-image4.png" usemap="#wigdetmap-psls-230x230-4" />' +
+            '          <img alt="" class="widgetImg5[[active5]]" src="' + document.imageDirPrefix + '/widget-psls-230x230-image5.png" usemap="#wigdetmap-psls-230x230-5" />' +
+            '          ' +
+            '          ' +
+            '          <map name="wigdetmap-psls-230x230-1" id="wigdetmap-psls-230x230-1">' +
+            '            <area alt="" class="area1" href="/services/product-security-lifecycle-support/requirement" coords="100,84,77,80,50,70,27,51,10,29,1,33,20,2,53,10,45,13,58,29,84,44,98,46,100,84" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-230x230-2" id="wigdetmap-psls-230x230-2">' +
+            '            <area alt="" class="area2" href="/services/product-security-lifecycle-support/design" coords="10,99,3,83,0,52,6,25,14,8,5,3,42,2,51,34,45,29,37,52,39,72,43,84,20,78,10,99" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-230x230-3" id="wigdetmap-psls-230x230-3">' +
+            '            <area alt="" class="area3" href="/services/product-security-lifecycle-support/implementation" coords="34,67,26,45,3,45,17,28,40,13,71,2,102,2,126,8,133,12,139,4,140,39,107,52,113,44,100,40,83,39,63,43,48,52,34,67" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-230x230-4" id="wigdetmap-psls-230x230-4">' +
+            '            <area alt="" class="area4" href="/services/product-security-lifecycle-support/testing-phase" coords="48,101,21,79,29,79,28,69,20,53,6,38,0,32,21,25,19,2,31,10,45,24,58,45,64,63,67,74,67,80,75,80,48,101" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-230x230-5" id="wigdetmap-psls-230x230-5">' +
+            '            <area alt="" class="area5" href="/services/product-security-lifecycle-support/deployment" coords="30,112,1,90,13,57,16,67,35,55,50,33,55,18,55,6,73,20,93,6,90,30,79,59,61,80,44,94,27,102,30,112" shape="poly" />' +
+            '          </map>        ' +
+            '        </div>' +
+            '        <!--widget container psls 230 x 230 ends here-->'
+        ;
+        
+        this.texts['sct400x400'] = 
+            '        <!--widget container sct 400 x 400 starts here-->' +
+            '        <div class="widgetContainer widget400x400 widgetsct">' +
+            '          <img src="' + document.imageDirPrefix + '/widget-sct-400x400.png" alt="" title="" />' +
+            '          ' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sctTitle%}</p>     ' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>  ' +
+            '        </div>' +
+            '        <!--widget container sct 400 x 400 ends here-->'
+        ;
+        
+        this.texts['sas400x400'] = 
+            '	<!--widget container sas 400 x 400 starts here-->' +
+            '        <div class="widgetContainer widget400x400 widgetsas">' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%sasTitle%}</p>' +
+            '                  ' +
+            '                  ' +
+            '                  <p class="widgetText1">{%sasReqText%}</p>' +
+            '                  <p class="widgetText2">{%sasDesText%}</p>' +
+            '                  <p class="widgetText3">{%sasImpText%}</p>' +
+            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>' +
+            '        ' +
+            '          ' +
+            '          <img alt="" class="widgetImg1[[active1]]" src="' + document.imageDirPrefix + '/widget-sas-400x400-image1.png" usemap="#wigdetmap-sas-400x400-1" />' +
+            '          <img alt="" class="widgetImg2[[active2]]" src="' + document.imageDirPrefix + '/widget-sas-400x400-image2.png" usemap="#wigdetmap-sas-400x400-2" />' +
+            '          <img alt="" class="widgetImg3[[active3]]" src="' + document.imageDirPrefix + '/widget-sas-400x400-image3.png" usemap="#wigdetmap-sas-400x400-3" />' +
+            '          ' +
+            '          ' +
+            '          <map name="wigdetmap-sas-400x400-1" id="wigdetmap-sas-400x400-1">' +
+            '            <area alt="" class="area1" href="/services/security-evaluation-services/attack-technology-watch" coords="330,28,308,64,280,94,235,122,200,132,139,132,98,121,60,101,22,62,2,28,62,1,79,28,103,49,142,66,165,43,188,67,219,56,258,25,270,1,330,28" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-sas-400x400-2" id="wigdetmap-sas-400x400-2">' +
+            '            <area alt="" class="area2" href="/services/security-evaluation-services/security-testing" coords="16,250,5,220,0,183,6,141,24,93,55,51,104,16,150,3,176,1,175,66,144,73,114,89,98,103,105,133,75,142,68,173,71,207,76,222,16,250" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-sas-400x400-3" id="wigdetmap-sas-400x400-3">' +
+            '            <area alt="" class="area3" href="/services/security-evaluation-services/security-audit" coords="165,250,106,224,116,183,108,141,75,133,83,101,53,79,17,68,1,66,4,1,38,5,91,24,133,59,161,99,176,153,177,205,165,250" shape="poly" />' +
+            '          </map>' +
+            '        </div>' +
+            '        <!--widget container sas 400 x 400 ends here-->'
+        ;
+        
+        this.texts['psls400x400'] = 
+            '        <!--widget container psls 400 x 400 starts here-->' +
+            '        <div class="widgetContainer widget400x400 widgetpsls">' +
+            '          <table cellpadding="0" cellspacing="0">' +
+            '            <tbody>' +
+            '              <tr>' +
+            '                <td>' +
+            '                  <p class="widgetTitle">{%pslsTitle%}</p>' +
+            '                  ' +
+            '                  ' +
+            '                  <p class="widgetText1">{%pslsReqText%}</p>' +
+            '                  <p class="widgetText2">{%pslsDesText%}</p>' +
+            '                  <p class="widgetText3">{%pslsImpText%}</p>' +
+            '                  <p class="widgetText4">{%pslsTstText%}</p>' +
+            '                  <p class="widgetText5">{%pslsDepText%}</p>' +            '                </td>' +
+            '              </tr>' +
+            '            </tbody>' +
+            '          </table>' +
+            '        ' +
+            '          ' +
+            '          <img alt="" class="widgetImg1[[active1]]" src="' + document.imageDirPrefix + '/widget-psls-400x400-image1.png" usemap="#wigdetmap-psls-400x400-1" />' +
+            '          <img alt="" class="widgetImg2[[active2]]" src="' + document.imageDirPrefix + '/widget-psls-400x400-image2.png" usemap="#wigdetmap-psls-400x400-2" />' +
+            '          <img alt="" class="widgetImg3[[active3]]" src="' + document.imageDirPrefix + '/widget-psls-400x400-image3.png" usemap="#wigdetmap-psls-400x400-3" />' +
+            '          <img alt="" class="widgetImg4[[active4]]" src="' + document.imageDirPrefix + '/widget-psls-400x400-image4.png" usemap="#wigdetmap-psls-400x400-4" />' +
+            '          <img alt="" class="widgetImg5[[active5]]" src="' + document.imageDirPrefix + '/widget-psls-400x400-image5.png" usemap="#wigdetmap-psls-400x400-5" />' +
+            '          ' +
+            '          ' +
+            '          <map name="wigdetmap-psls-400x400-1" id="wigdetmap-psls-400x400-1">' +
+            '            <area alt="" class="area1" href="/services/product-security-lifecycle-support/requirement" coords="174,144,146,140,111,131,72,110,42,83,18,49,3,55,34,1,92,15,79,21,95,42,125,66,160,76,173,78,174,144" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-400x400-2" id="wigdetmap-psls-400x400-2">' +
+            '            <area alt="" class="area2" href="/services/product-security-lifecycle-support/design" coords="15,172,5,145,-1,109,2,70,13,34,23,12,10,3,71,1,90,59,80,52,69,75,67,111,71,136,74,146,37,136,15,172" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-400x400-3" id="wigdetmap-psls-400x400-3">' +
+            '            <area alt="" class="area3" href="/services/product-security-lifecycle-support/implementation" coords="58,116,44,78,2,79,20,56,47,34,82,14,125,2,167,1,208,11,232,21,241,7,243,67,186,90,194,77,177,71,149,67,117,72,88,86,69,102,58,116" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-400x400-4" id="wigdetmap-psls-400x400-4">' +
+            '            <area alt="" class="area4" href="/services/product-security-lifecycle-support/testing-phase" coords="89,175,39,139,56,138,51,116,35,87,13,65,2,57,40,43,37,0,64,21,91,54,108,86,118,116,121,138,137,138,89,175" shape="poly" />' +
+            '          </map>' +
+            '          ' +
+            '          <map name="wigdetmap-psls-400x400-5" id="wigdetmap-psls-400x400-5">' +
+            '            <area alt="" class="area5" href="/services/product-security-lifecycle-support/deployment" coords="51,193,1,155,22,99,25,113,30,112,50,100,76,75,90,46,96,10,128,33,160,10,158,44,147,78,126,113,108,136,82,159,56,172,47,177,51,193" shape="poly" />' +
+            '          </map>        ' +
+            '        </div>' +
+            '        <!--widget container psls 400 x 400 ends here-->'
+        ;
+        
+        this.texts['sct80x80'] = 
+            '        <!--widget container sct 80 x 80 starts here-->' +
+            '        <img src="' + document.imageDirPrefix + '/widget-sct-80x80.png" alt="" title="" />' +
+            '        <!--widget container sct 80 x 80 ends here-->'
+        ;
+        
+        this.texts['sas80x80'] = 
+            '        <!--widget container sas 80 x 80 starts here-->' +
+            '        <img alt="" src="' + document.imageDirPrefix + '/widget-sas-80x80.png" />' +
+            '        <!--widget container sas 80 x 80 ends here-->'
+        ;
+        
+        this.texts['psls80x80'] = 
+            '        <!--widget container psls 80 x 80 starts here-->' +
+            '        <img alt="" src="' + document.imageDirPrefix + '/widget-psls-80x80.png" />' +
+            '        <!--widget container psls 80 x 80 ends here-->'
+        ;
+                 
+
+
+      
+      
+        $.ajax({
+          type: "GET",
+        	url: "/media/embed/widgettexts.xml",
+        	dataType: "xml",
+        	success: function(xml) {
+        	  this.xmlDoc = xml;
+        	  $(this.xmlDoc).find('text').each(function(){
+        	    var k = $(this).attr('id');
+        	    var t = $(this).text();
+        	    
+        	    for (var key in window.chartWidget.texts) {
+        		if(window.chartWidget.texts.hasOwnProperty(key)) {
+        		    window.chartWidget.texts[key] = window.chartWidget.texts[key].replace("{%" + k + "%}", t);
+        	        }
+        	    }
+            });
+            window.chartWidget.loadReady = true;
+          },
+          error: function() {
+            window.chartWidget.hasError = true;
+          }
+        });
+      };
+      
+      this.preloadImages = function(images) {
+        $(images).each(function(){
+          $('<img/>')[0].src = document.imageDirPrefix + '/' + this;
+        });
+      };
+      
+      this.render = function(key, targetDiv, activeDiv) {
+        if (this.hasError) { return; }
+        if (!this.loadReady) {
+          setTimeout ("window.chartWidget.render('" + key + "', '" + targetDiv + "', " + activeDiv + ");", 100);
+          return;
+        }
+        if (this.texts[key] != null) {
+          var n = this.texts[key];
+          
+          for (var i=1;i<=5;i++) {
+            if (i != activeDiv) {
+              n = n.replace('[[active' + i + ']]', '');
+            }
+            else {
+              n = n.replace('[[active' + i + ']]', ' active');
+            }
+          }
+          
+          $('#' + targetDiv).html(n);
+          //document.write (this.texts[key]);
+        }
+        if (key == 'sas230x230') {
+          window.chartWidget.preloadImages(
+          ['widget-sas-230x230-image1-hover.png',
+           'widget-sas-230x230-image2-hover.png',
+           'widget-sas-230x230-image3-hover.png'
+          ]);
+        }
+        else if (key == 'sas400x400') {
+          window.chartWidget.preloadImages(
+          ['widget-sas-400x400-image1-hover.png',
+           'widget-sas-400x400-image2-hover.png',
+           'widget-sas-400x400-image3-hover.png'
+          ]);
+        }
+        else if (key == 'psls230x230') {
+          window.chartWidget.preloadImages(
+          ['widget-psls-230x230-image1-hover.png',
+           'widget-psls-230x230-image2-hover.png',
+           'widget-psls-230x230-image3-hover.png',
+           'widget-psls-230x230-image4-hover.png',
+           'widget-psls-230x230-image5-hover.png'
+          ]);
+        }
+        else if (key == 'psls400x400') {
+          window.chartWidget.preloadImages(
+          ['widget-psls-400x400-image1-hover.png',
+           'widget-psls-400x400-image2-hover.png',
+           'widget-psls-400x400-image3-hover.png',
+           'widget-psls-400x400-image4-hover.png',
+           'widget-psls-400x400-image5-hover.png'
+          ]);
+        }
+      }
+    }
+    window.chartWidget = new ChartWidget();
+    window.chartWidget.init();   
+    
+  
+  
+  
+  
+  
+});
