@@ -1,0 +1,22 @@
+$(document).ready(function()
+{
+  jQuery.noConflict();
+    (function($) 
+    {
+      $( '.show-solution' ).click( function() {
+          $( this ).next().slideToggle( 'fast' );
+          return false;
+    } );
+
+      $( '.show-first' ).click( function() {
+          $( this ).next().slideToggle( 'slow' );
+          return false;
+    } );
+
+      $( '.show-second' ).click( function() {
+          $( this ).next().slideToggle( 'slow' );
+          return false;
+    } );
+            
+    })(jQuery);
+});
